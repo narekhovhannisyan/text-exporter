@@ -1,47 +1,32 @@
 const Promise = require('bluebird')
 const fs = require('fs')
 const path = require('path')
-const catcher = require('./catcher')
-
-const writeToFile = (file, string) => {
-  return Promise.resolve().then(() => {
-    fs.appendFileSync(file, string)
-  })
-}
-
-const createFileAndWrite = (target, string) => {
-  return Promise.resolve().then(() => {
-    try {
-      fs.writeFileSync(target, string)
-    } catch (e) {
-      console.log('Cannot write file ', e)
-    }
-  })
-}
 
 const dirExists = path => {
-  return fs.existsSync(path)
+  return Promise.resolve().then(fs.existsSync(path))
 }
 
-const recursiveScan = (source, processor) => {
+const recursiveScan = (source, processor, file) => {
   const process = dir => {
     if (fs.statSync(path.join(source, dir)).isDirectory()) {
-      return processor(path.join(source, dir), dir).then(() => {
-        return recursiveScan(path.join(source, dir), processor)
+      //console.log(path.join(source, dir))
+      return processor(path.join(source, dir), file).then(() => {
+        return recursiveScan(path.join(source, dir), processor, file)
       })
     } else if (fs.statSync(path.join(source, dir)).isFile()) {
-      return processor(path.join(source, dir), dir)
+      //console.log(path.join(source, dir))
+      return processor(path.join(source, dir), file)
     } else {
+      //console.log(path.join(source, dir))
       return Promise.reject(Error('something wrong with the directory'))
     }
   }
   const dirs = fs.readdirSync(source)
+  console.log(dirs)
   return Promise.map(dirs, process)
 }
 
 module.exports = {
   dirExists,
   recursiveScan,
-  writeToFile,
-  createFileAndWrite,
 }

@@ -3,8 +3,9 @@ const utils = require('./utils')
 const catcher = require('./catcher')
 const Promise = require('bluebird')
 
-const source = '.\src'
+const source = '\src'
+const dist = '\myfile.txt'
 
 gulp.task('default', () => {
-  utils.recursiveScan(source, catcher.textCatcher('myfile.txt'))
+  return utils.recursiveScan(source, catcher.textCatcher, dist)
 })

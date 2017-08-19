@@ -1,0 +1,26 @@
+{
+  "name": "text-exporter",
+  "version": "1.0.0",
+  "description": "Exports containment of text tags from your react projects",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "gulp": "^3.9.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/narekhovhannisyan/text-exporter.git"
+  },
+  "author": "Narek Hovhannisyan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/narekhovhannisyan/text-exporter/issues"
+  },
+  "homepage": "https://github.com/narekhovhannisyan/text-exporter#readme"
+}

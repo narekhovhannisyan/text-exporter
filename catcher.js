@@ -3,25 +3,49 @@ const path = require('path')
 const Promise = require('bluebird')
 const utils = require('./utils')
 
-const catchText = file => {
-  const regexp = /<Text>(.*?)<\/Text>/g
-  const input = fs.readFileSync(file, 'utf8')
-  return input.match(regexp).map(val => {
-    return val.replace(/<\/?Text>/g, '').toString().split(',').join('\n')
-  })
+const writeToFile = (target, string) => {
+  console.log(target)
+  try {
+    fs.appendFileSync(target, string + '\n')
+  } catch (e) {
+    console.log('Cannot write to file', e)
+  }
 }
 
-const textCatcher = file => {
-  const ext = '.js'
-  const string = ''
+const createFileAndWrite = (target, string) => {
+  console.log('11111111111111111')
+  try {
+    fs.writeFileSync(target, string + '\n')
+  } catch (e) {
+    console.log('Cannot create and write to file', e)
+  }
+}
+
+const arrToString = arr => {
+  return arr.toString().split(',').join('\n')
+}
+
+const catchText = source => {
+  const regexp = /<Text>(.*?)<\/Text>/g
+  const input = fs.readFileSync(source, 'utf8')
+  return arrToString(
+    input.match(regexp).map(val => {
+      return val.replace(/<\/?Text>/g, '')
+    })
+  )
+}
+
+const textCatcher = (source, file) => {
   return Promise.resolve().then(() => {
-    if (!utils.dirExists(file)) {
-      string = catchText(file)
-      utils.createFileAndWrite(file, string)
-    }
-    if (fs.statSync(file).isFile() && path.extname(file) == ext) {
-      return catchText(file)
-    }
+    if (fs.statSync(source).isFile() && path.extname(source) == '.js') {
+      if (!utils.dirExists(file)) {
+        console.log(typeof catchText(source))
+        return createFileAndWrite(file, catchText(source))
+      } else {
+        console.log(typeof catchText(source))
+        return writeToFile(file, catchText(source))
+      }
+    } else return
   })
 }
 
