@@ -3,8 +3,13 @@ const path = require('path')
 const Promise = require('bluebird')
 const utils = require('./utils')
 
-const writeToFile = (target, string) => {
-  console.log(target)
+/**
+ * @param target
+ * @param string
+ * @description Appends file with given `string` content.
+ *  `target` is path of the file.
+ */
+const appendFile = (target, string) => {
   try {
     fs.appendFileSync(target, string + '\n')
   } catch (e) {
@@ -12,8 +17,13 @@ const writeToFile = (target, string) => {
   }
 }
 
+/**
+ * @param target
+ * @param string
+ * @description Creates file with given `string` content.
+ *  `target` is path of the file.
+ */
 const createFileAndWrite = (target, string) => {
-  console.log('11111111111111111')
   try {
     fs.writeFileSync(target, string + '\n')
   } catch (e) {
@@ -21,31 +31,47 @@ const createFileAndWrite = (target, string) => {
   }
 }
 
-const arrToString = arr => {
-  return arr.toString().split(',').join('\n')
-}
+/**
+ * @param arr
+ * @returns {string}
+ * @description Converts array to string.
+ */
+const arrToString = arr => arr.toString().split(',').join('\n')
 
+
+/**
+ * @param source
+ * @returns {string}
+ * @description
+ */
 const catchText = source => {
   const regexp = /<Text>(.*?)<\/Text>/g
   const input = fs.readFileSync(source, 'utf8')
+
   return arrToString(
-    input.match(regexp).map(val => {
-      return val.replace(/<\/?Text>/g, '')
-    })
+      input.match(regexp).map(val => {
+        return val.replace(/<\/?Text>/g, '')
+      })
   )
 }
 
+/**
+ * @param source
+ * @param file
+ * @returns {Promise<T>}
+ * @description Checks if directory with given `source` exists and extension is js
+ *  then checks if file is already created. If there is no file, it creates and writes `source`.
+ *  Otherwise appends it.
+ */
 const textCatcher = (source, file) => {
   return Promise.resolve().then(() => {
-    if (fs.statSync(source).isFile() && path.extname(source) == '.js') {
+    if (fs.statSync(source).isFile() && path.extname(source) === '.js') {
       if (!utils.dirExists(file)) {
-        console.log(typeof catchText(source))
         return createFileAndWrite(file, catchText(source))
       } else {
-        console.log(typeof catchText(source))
-        return writeToFile(file, catchText(source))
+        return appendFile(file, catchText(source))
       }
-    } else return
+    }
   })
 }
 
