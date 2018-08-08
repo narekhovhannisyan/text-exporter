@@ -1,7 +1,6 @@
 const gulp = require('gulp')
-const utils = require('./utils')
-const catcher = require('./catcher')
-const Promise = require('bluebird')
+const utils = require('./src/utils')
+const catcher = require('./src/catcher')
 
 const source = '\src'
 const dist = '\myfile.txt'
